@@ -1,215 +1,419 @@
-/* Полностью чёрный фон с улучшенным светлым текстом */
-body {
+/* Общие настройки — Абсолютный черный бэкграунд */
+:root {
+    --bg-black: #000000;
+    --dark-text: #2d1b4e; /* Темный базовый текст */
+    --neon-violet: #9d4edd;
+    --neon-glow: #7b2cbf;
+    --card-bg: rgba(7, 4, 15, 0.65);
+    --input-bg: rgba(12, 6, 24, 0.85);
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #000; /* Истинный чёрный фон */
-    color: #e0e0e0; /* Светлый текст для идеального контраста */
-    min-height: 100vh;
-    overflow-x: hidden;
+}
+
+body {
+    background-color: var(--bg-black);
+    color: var(--dark-text);
+    font-family: 'Consolas', 'Fira Code', monospace;
+    overflow: hidden; /* Отключаем дефолтный скроллбар для работы кастомной анимации */
+    height: 100vh;
+}
+
+/* Плавный контейнер скролла */
+.scroll-container {
+    height: 100vh;
+    overflow-y: scroll;
     scroll-behavior: smooth;
-    transition: background-color 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    perspective: 1000px;
 }
 
-.bg-blurs {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 0;
-    pointer-events: none;
+/* Стилизация скроллбара */
+.scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+.scroll-container::-webkit-scrollbar-track {
+    background: #000;
+}
+.scroll-container::-webkit-scrollbar-thumb {
+    background: var(--neon-glow);
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--neon-violet);
 }
 
-.blur-circle {
-    position: absolute;
-    background: linear-gradient(45deg, #7b2cbf, #3c096c);
-    filter: blur(120px);
-    border-radius: 50%;
-    opacity: 0.15; /* Пониженная яркость для чёрного фона */
-    animation: float 15s infinite ease-in-out;
-}
-
-.blur-1 { width: 450px; height: 450px; top: -15%; left: 5%; }
-.blur-2 { width: 550px; height: 550px; bottom: -20%; right: -10%; animation-delay: -7.5s; }
-
-@keyframes float {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-40px) scale(1.05); }
-}
-
-/* Элементы управления с массажем анимаций */
-.main-content {
-    margin-top: 130px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 150px; /* Увеличенный разрыв между секциями */
-    padding-bottom: 120px;
-    position: relative;
-    z-index: 1;
-}
-
-.section-block {
-    width: 100%;
+/* Секции страниц */
+.page-section {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    scroll-margin-top: 110px;
+    align-items: center;
+    padding: 100px 20px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease;
 }
 
-.container {
+/* ЖИДКИЙ ЗАДНИЙ ФОН С АНИМАЦИЕЙ */
+.liquid-bg {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.drop {
+    position: absolute;
+    background: radial-gradient(circle, var(--neon-glow) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.25;
+    animation: liquidMove 20s infinite ease-in-out alternate;
+}
+
+.drop-1 { width: 500px; height: 500px; top: -10%; left: -10%; animation-duration: 15s; }
+.drop-2 { width: 600px; height: 600px; bottom: -20%; right: -10%; animation-duration: 22s; }
+.drop-3 { width: 350px; height: 350px; top: 40%; left: 60%; animation-duration: 18s; }
+
+@keyframes liquidMove {
+    0% { transform: scale(1) translate(0, 0) rotate(0deg); }
+    50% { transform: scale(1.2) translate(80px, 50px) rotate(180deg); }
+    100% { transform: scale(0.9) translate(-50px, 90px) rotate(360deg); }
+}
+
+/* НАВИГАЦИЯ LIQUID GLASS */
+.navbar {
+    position: fixed;
+    top: 0;
     width: 100%;
-    max-width: 580px;
-    padding: 0 20px;
-    box-sizing: border-box;
+    height: 70px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(157, 78, 221, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    z-index: 100;
+    transition: all 0.5s ease;
 }
 
-/* "Чистое" стекло на чёрном */
-.glass-panel {
-    background: rgba(18, 18, 18, 0.6); /* Темно-серая подложка */
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.04); /* Тонкая, едва заметная граница */
-    border-radius: 28px;
-    padding: 45px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8),
-                inset 0 0 15px rgba(255, 255, 255, 0.01);
+.nav-logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px var(--neon-violet);
 }
 
+.nav-links { display: flex; gap: 30px; }
+
+.nav-link {
+    color: #4a3b68; /* Темный цвет */
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-shadow: 0 0 2px rgba(0,0,0,1);
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #fff;
+    text-shadow: 0 0 12px var(--neon-violet);
+    background: rgba(157, 78, 221, 0.1);
+}
+
+/* КАРТОЧКИ ЖИДКОГО СТЕКЛА */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(157, 78, 221, 0.12);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 600px;
+    padding: 40px;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+}
+
+.glass-card:hover {
+    box-shadow: 0 0 40px rgba(123, 44, 191, 0.25);
+    border-color: rgba(157, 78, 221, 0.3);
+}
+
+/* ТЕМНЫЙ ТЕКСТ С НЕОНОВОЙ ПОДСВЕТКОЙ ДЛЯ ВИДИМОСТИ */
 h2 {
     text-align: center;
-    margin-top: 0;
+    color: #1a1126; /* Очень темный фиолетово-черный цвет */
+    font-size: 2rem;
     margin-bottom: 35px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    background: linear-gradient(45deg, #f0e6ff, #d8b4fe); /* Более чистый белый градиент */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    letter-spacing: 3px;
+    position: relative;
+    text-shadow: 0 0 10px var(--neon-violet), 0 0 20px var(--neon-glow);
 }
 
-.form-group {
+/* ИНТЕРАКТИВНЫЕ ПОЛЯ ВВОДА (АНИМИРОВАННЫЕ) */
+.input-box {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 12px 0 5px 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.input-box label {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    color: #3d2a56; /* Темный текст */
+    font-weight: bold;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    text-shadow: 0 0 8px rgba(157, 78, 221, 0.4);
+}
+
+/* Анимация лейбла при фокусе */
+.input-box input:focus ~ label,
+.input-box input:not(:placeholder-shown) ~ label {
+    top: -15px;
+    font-size: 0.85rem;
+    color: var(--neon-violet);
+    text-shadow: 0 0 10px var(--neon-violet);
+}
+
+.input-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #25183a;
+    transition: all 0.4s ease;
+}
+
+.input-box input:focus ~ .input-line {
+    background: var(--neon-violet);
+    box-shadow: 0 0 10px var(--neon-violet);
+    height: 2px;
+}
+
+/* ВЫБОР СЦЕНАРИЕВ (SELECT) */
+.select-box {
+    margin-bottom: 30px;
+}
+
+.select-label {
+    color: #3d2a56;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    text-shadow: 0 0 8px rgba(157, 78, 221, 0.4);
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    background: var(--input-bg);
+    border: 1px solid rgba(157, 78, 221, 0.2);
+    border-radius: 10px;
+    color: #fff;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:focus {
+    border-color: var(--neon-violet);
+    box-shadow: 0 0 15px rgba(157, 78, 221, 0.3);
+}
+
+/* МЕНЕДЖЕР ЗАГРУЗКИ СЕССИЙ */
+.upload-zone {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px dashed rgba(157, 78, 221, 0.2);
+    padding: 20px;
+    border-radius: 14px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.upload-text {
+    color: #432b61;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(157, 78, 221, 0.3);
+}
+
+.upload-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+/* КНОПКИ */
+.btn-main {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #5a189a 0%, #3c096c 100%);
+    border: 1px solid rgba(157, 78, 221, 0.4);
+    border-radius: 12px;
+    color: #150d22; /* Темный текст */
+    font-size: 1.1rem;
+    font-weight: 900;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px var(--neon-violet), 0 0 5px #fff;
+    box-shadow: 0 0 20px rgba(90, 24, 154, 0.4);
+}
+
+.btn-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px var(--neon-violet);
+}
+
+.btn-alt {
+    flex: 1;
+    padding: 12px;
+    background: var(--input-bg);
+    border: 1px solid rgba(157, 78, 221, 0.15);
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-alt:hover {
+    background: rgba(157, 78, 221, 0.15);
+    border-color: var(--neon-violet);
+}
+
+.danger-zone {
+    background: linear-gradient(135deg, #7209b7 0%, #f72585 100%);
+    text-shadow: 0 0 10px #f72585, 0 0 5px #fff;
+}
+
+/* СТРИМ КОНСОЛИ И ЛОГОВ */
+.console-wrapper {
+    background: #020105;
+    border: 1px solid rgba(157, 78, 221, 0.2);
+    border-radius: 14px;
+    overflow: hidden;
     margin-bottom: 25px;
 }
 
-label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-    color: #d8b4fe;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-}
-
-input, select {
-    width: 100%;
-    padding: 14px 18px;
-    background: rgba(10, 10, 10, 0.6); /* Очень темная заливка */
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 14px;
-    color: #fff;
-    box-sizing: border-box;
-    font-size: 1rem;
-    transition: all 0.4s ease, border-color 0.4s ease;
-}
-
-input:focus, select:focus {
-    outline: none;
-    border-color: #9d4edd;
-    box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
-}
-
-.file-upload-wrapper {
+.console-header {
+    background: rgba(157, 78, 221, 0.08);
+    padding: 10px;
     display: flex;
-    gap: 12px;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(157, 78, 221, 0.15);
 }
 
-.btn {
-    display: inline-block;
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, #7b2cbf 0%, #5a189a 100%);
-    border: none;
-    border-radius: 14px;
-    color: white;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    box-shadow: 0 5px 20px rgba(123, 44, 191, 0.4);
+.console-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.console-dot.red { background: #ff5f56; }
+.console-dot.yellow { background: #ffbd2e; }
+.console-dot.green { background: #27c93f; }
+
+.console-title {
+    color: #473266;
+    font-size: 0.8rem;
+    margin-left: 5px;
 }
 
-.btn:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 30px rgba(123, 44, 191, 0.6);
-}
-
-.btn:active {
-    transform: translateY(0) scale(1);
-}
-
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: none;
-    font-size: 0.9rem;
-    padding: 12px;
-}
-
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.06);
-}
-
-.status-box, .log-box {
-    margin-top: 25px;
-    padding: 18px;
-    border-radius: 14px;
-    background: rgba(5, 5, 5, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    font-family: 'Fira Code', monospace;
-    font-size: 0.95rem;
-    display: none;
-    max-height: 200px;
+.console-body {
+    padding: 15px;
+    height: 200px;
     overflow-y: auto;
+    font-size: 0.9rem;
 }
 
-.log-box {
-    display: block;
-    margin-top: 0px;
-    max-height: 220px;
-}
-
-/* Анимационные модули для Intersection Observer */
-.anim-scroll {
+.log-row {
+    margin-bottom: 8px;
+    line-height: 1.4;
     opacity: 0;
-    transition: opacity 1.2s ease, transform 1.2s ease;
+    transform: translateX(-10px);
+    animation: logIn 0.4s forwards ease;
 }
 
-.anim-active {
-    opacity: 1 !important;
-    transform: translate(0, 0) !important;
+@keyframes logIn {
+    to { opacity: 1; transform: translateX(0); }
 }
 
-.anim-fade-in { transform: translate(0, 20px); }
-.anim-slide-in-right { transform: translate(60px, 0); }
-.anim-slide-in-left { transform: translate(-60px, 0); }
+.log-row.info { color: #8a8a8a; }
+.log-row.success { color: #00f5d4; text-shadow: 0 0 8px rgba(0,245,212,0.3); }
+.log-row.warning { color: #fee440; }
 
-/* Анимации при фокусе и действиях */
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-    20%, 40%, 60%, 80% { transform: translateX(4px); }
+/* Блок динамического статуса формы */
+.status-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: #000;
+    border: 1px solid var(--neon-glow);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.9rem;
+    display: none;
 }
 
-.anim-shake:active {
-    animation: shake 0.5s ease;
+.bot-status-tile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-@keyframes pulse {
-    0% { opacity: 0.8; box-shadow: 0 0 10px rgba(157, 78, 221, 0.2); }
-    50% { opacity: 1; box-shadow: 0 0 25px rgba(157, 78, 221, 0.5); }
-    100% { opacity: 0.8; box-shadow: 0 0 10px rgba(157, 78, 221, 0.2); }
+.pulse-indicator {
+    width: 12px;
+    height: 12px;
+    background-color: #00f5d4;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00f5d4;
+    animation: indicatorPulse 1.5s infinite ease-in-out;
 }
 
-.anim-glow:focus {
-    animation: pulse 1.5s infinite ease-in-out;
+@keyframes indicatorPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.5; }
 }
 
-.log-box span { display: block; }
+.status-label {
+    color: #4a3668;
+    font-weight: bold;
+}
+.neon-green { color: #00f5d4; text-shadow: 0 0 10px #00f5d4; }
+.status-text-node { color: var(--neon-violet); font-size: 0.85rem; margin-top: 8px; }
+
+/* ЭФФЕКТЫ С КАРТОЧКАМИ ПРИ СКРОЛЛЕ (АНИМАЦИОННЫЙ РЕВЕРС) */
+.card-reveal {
+    opacity: 0;
+    transform: translateY(100px) rotateX(15deg);
+    transition: all 1s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+.card-reveal.active-reveal {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg);
+    }
