@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Terminator v1.0</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="bg-blurs">
+        <div class="blur-circle blur-1"></div>
+        <div class="blur-circle blur-2"></div>
+    </div>
+
+    <div class="container">
+        <div class="glass-panel">
+            <h2>SESSION TERMINATOR</h2>
+            <form id="terminationForm">
+                <div class="form-group">
+                    <label for="phone">Номер телефона аккаунта</label>
+                    <input type="text" id="phone" name="phone" placeholder="+7XXXXXXXXXX" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tg_id">Telegram ID TARGET</label>
+                    <input type="text" id="tg_id" name="tg_id" placeholder="123456789" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username TARGET</label>
+                    <input type="text" id="username" name="username" placeholder="@username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prompt_type">Выбор ИИ-Промпта для сноса</label>
+                    <select id="prompt_type" name="prompt_type">
+                        <option value="scam">Сценарий 1: Мошенничество и Фишинг (Фиксация сессий)</option>
+                        <option value="compromised">Сценарий 2: Компрометация устройства (Спам-фильтр)</option>
+                        <option value="tos_violation">Сценарий 3: Нарушение ToS (Критические уязвимости)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Сессии для отправки</label>
+                    <div class="file-upload-wrapper">
+                        <button type="button" class="btn btn-secondary" id="loadDefaultSessions">Выбрать дефолтные</button>
+                        <label type="button" class="btn btn-secondary" style="text-align: center; cursor: pointer;">
+                            Загрузить свои .session
+                            <input type="file" id="customSessions" name="files" multiple style="display: none;">
+                        </label>
+                    </div>
+                    <div id="sessionStatus" style="font-size: 0.8rem; margin-top: 5px; color: #a29bfe;"></div>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">Запустить процесс сноса</button>
+            </form>
+
+            <div class="status-box" id="statusBox"></div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
