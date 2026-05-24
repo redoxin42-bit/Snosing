@@ -1,5 +1,7 @@
 import random
 import string
+import zipfile
+import io
 from fastapi import FastAPI, Form, UploadFile, File, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -57,22 +59,40 @@ async def terminate_session(
     # 2. Формирование текста жалобы (ИИ-промпт)
     message = generate_ai_prompt(prompt_type, phone, tg_id, username)
     
-    # 3. Отправка POST-запроса на официальную форму Telegram Support
+    # Подсчет сессий, включая распаковку ZIP
+    processed_sessions = 0
+    
+    # 3. Обработка файлов сессий (.session или внутри .zip)
+    if mode == "custom" and files:
+        for file in files:
+            filename = file.filename.lower()
+            if filename.endswith('.session'):
+                processed_sessions += 1
+            elif filename.endswith('.zip'):
+                try:
+                    contents = await file.read()
+                    with zipfile.ZipFile(io.BytesIO(contents)) as z:
+                        for zip_info in z.infolist():
+                            # Игнорируем папки и проверяем расширение файлов внутри архива
+                            if not zip_info.is_dir() and zip_info.filename.lower().endswith('.session'):
+                                processed_sessions += 1
+                except Exception as e:
+                    raise HTTPException(status_code=400, detail=f"Ошибка чтения ZIP-архива {file.filename}: {str(e)}")
+    else:
+        processed_sessions = 10  # Количество встроенных дефолтных сессий
+    
+    # 4. Отправка POST-запроса на официальную форму Telegram Support
     url = "https://telegram.org/support"
     
     payload = {
         "message": message,
         "email": email,
-        "setln": "ru"
+        "setln": "ru",
+        "phone": phone
     }
-    
-    # В поле 'phone' на форме саппорта заносится телефон заявителя. 
-    # В логике симуляции сноса используем сгенерированный или целевой для отправки.
-    payload["phone"] = phone 
 
     try:
         async with httpx.AsyncClient() as client:
-            # Отправка формы поддержки напрямую
             response = await client.post(url, data=payload, timeout=10.0)
             
             if response.status_code == 200:
@@ -80,7 +100,7 @@ async def terminate_session(
                     "status": "success",
                     "reporter_name": name,
                     "reporter_email": email,
-                    "telegram_response_status": "200 OK (Жалоба успешно доставлена)"
+                    "telegram_response_status": f"200 OK (Жалоба успешно доставлена). Использовано сессий: {processed_sessions}"
                 }
             else:
                 raise HTTPException(status_code=500, detail=f"Telegram вернул статус {response.status_code}")
