@@ -12,50 +12,104 @@
         <div class="blur-circle blur-2"></div>
     </div>
 
-    <div class="container">
-        <div class="glass-panel">
-            <h2>SESSION TERMINATOR</h2>
-            <form id="terminationForm">
-                <div class="form-group">
-                    <label for="phone">Номер телефона аккаунта</label>
-                    <input type="text" id="phone" name="phone" placeholder="+7XXXXXXXXXX" required>
-                </div>
+    <!-- Навигационная панель в стиле жидкого стекла -->
+    <nav class="navbar">
+        <div class="nav-logo">WELLON HUB</div>
+        <div class="nav-links">
+            <a href="#terminator" class="nav-link active">Снос аккаунта</a>
+            <a href="#chat" class="nav-link">Чат ИИ</a>
+            <a href="#bot" class="nav-link">Бот-Панель</a>
+        </div>
+    </nav>
 
-                <div class="form-group">
-                    <label for="tg_id">Telegram ID TARGET</label>
-                    <input type="text" id="tg_id" name="tg_id" placeholder="123456789" required>
-                </div>
+    <div class="main-content">
+        <!-- Секция 1: Снос аккаунта -->
+        <div id="terminator" class="section-block">
+            <div class="container">
+                <div class="glass-panel">
+                    <h2>SESSION TERMINATOR</h2>
+                    <form id="terminationForm">
+                        <div class="form-group">
+                            <label for="phone">Номер телефона аккаунта</label>
+                            <input type="text" id="phone" name="phone" placeholder="+7XXXXXXXXXX" required>
+                        </div>
 
-                <div class="form-group">
-                    <label for="username">Username TARGET</label>
-                    <input type="text" id="username" name="username" placeholder="@username" required>
-                </div>
+                        <div class="form-group">
+                            <label for="tg_id">Telegram ID TARGET</label>
+                            <input type="text" id="tg_id" name="tg_id" placeholder="123456789" required>
+                        </div>
 
-                <div class="form-group">
-                    <label for="prompt_type">Выбор ИИ-Промпта для сноса</label>
-                    <select id="prompt_type" name="prompt_type">
-                        <option value="scam">Сценарий 1: Мошенничество и Фишинг (Фиксация сессий)</option>
-                        <option value="compromised">Сценарий 2: Компрометация устройства (Спам-фильтр)</option>
-                        <option value="tos_violation">Сценарий 3: Нарушение ToS (Критические уязвимости)</option>
-                    </select>
-                </div>
+                        <div class="form-group">
+                            <label for="username">Username TARGET</label>
+                            <input type="text" id="username" name="username" placeholder="@username" required>
+                        </div>
 
-                <div class="form-group">
-                    <label>Сессии для отправки</label>
-                    <div class="file-upload-wrapper">
-                        <button type="button" class="btn btn-secondary" id="loadDefaultSessions">Выбрать дефолтные</button>
-                        <label type="button" class="btn btn-secondary" style="text-align: center; cursor: pointer;">
-                            Загрузить свои .session
-                            <input type="file" id="customSessions" name="files" multiple style="display: none;">
-                        </label>
+                        <div class="form-group">
+                            <label for="prompt_type">Выбор ИИ-Промпта для сноса</label>
+                            <select id="prompt_type" name="prompt_type">
+                                <option value="scam">Сценарий 1: Мошенничество и Фишинг (Фиксация сессий)</option>
+                                <option value="compromised">Сценарий 2: Компрометация устройства (Спам-фильтр)</option>
+                                <option value="tos_violation">Сценарий 3: Нарушение ToS (Критические уязвимости)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Сессии для отправки</label>
+                            <div class="file-upload-wrapper">
+                                <button type="button" class="btn btn-secondary" id="loadDefaultSessions">Выбрать дефолтные</button>
+                                <label class="btn btn-secondary" style="text-align: center; cursor: pointer; display: inline-block; width: 100%; box-sizing: border-box;">
+                                    Загрузить свои .session / .zip
+                                    <input type="file" id="customSessions" name="files" accept=".session,.zip" multiple style="display: none;">
+                                </label>
+                            </div>
+                            <div id="sessionStatus" style="font-size: 0.8rem; margin-top: 8px; color: #a29bfe; text-align: center;"></div>
+                        </div>
+
+                        <button type="submit" class="btn" id="submitBtn">Запустить процесс сноса</button>
+                    </form>
+
+                    <div class="status-box" id="statusBox"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Секция 2: Чат -->
+        <div id="chat" class="section-block">
+            <div class="container">
+                <div class="glass-panel">
+                    <h2>FLARE CODE AI CHAT</h2>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message system">[SYSTEM] ИИ-ассистент Flare готов к работе. Задайте свой технический вопрос...</div>
                     </div>
-                    <div id="sessionStatus" style="font-size: 0.8rem; margin-top: 5px; color: #a29bfe;"></div>
+                    <div class="chat-input-wrapper">
+                        <input type="text" id="chatInput" placeholder="Задайте вопрос по коду или скриптам...">
+                        <button type="button" class="btn btn-send" id="sendChatBtn">Отправить</button>
+                    </div>
                 </div>
+            </div>
+        </div>
 
-                <button type="submit" class="btn" id="submitBtn">Запустить процесс сноса</button>
-            </form>
-
-            <div class="status-box" id="statusBox"></div>
+        <!-- Секция 3: Бот -->
+        <div id="bot" class="section-block">
+            <div class="container">
+                <div class="glass-panel">
+                    <h2>УПРАВЛЕНИЕ БОТОМ</h2>
+                    <div class="bot-status-card">
+                        <div class="status-indicator online"></div>
+                        <span>Статус SnoserBot: <strong style="color: #00f5d4;">Запущен</strong></span>
+                    </div>
+                    <div class="form-group" style="margin-top: 25px;">
+                        <label>Консоль ядра и SQLite логи</label>
+                        <div class="status-box" style="display: block; max-height: 180px; overflow-y: auto;">
+                            [INFO] Инициализация ядра автоматизации...<br>
+                            [INFO] Успешное подключение к репозиторию SnoserBot<br>
+                            [SUCCESS] База данных SQLite синхронизирована.<br>
+                            [INFO] Ожидание триггеров на снос...
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger">Перезагрузить модули бота</button>
+                </div>
+            </div>
         </div>
     </div>
 
