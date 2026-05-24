@@ -3,97 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> SESSION KILL BY MEMORY <title>
+    <title>Wellon Hub | Session Terminator</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <div class="bg-blurs">
-        <div class="blur-circle blur-1"></div>
-        <div class="blur-circle blur-2"></div>
+    <div class="liquid-bg">
+        <div class="drop drop-1"></div>
+        <div class="drop drop-2"></div>
+        <div class="drop drop-3"></div>
     </div>
 
-    <nav class="navbar hidden-nav">
-        <div class="nav-logo">Session Kill memory</div>
+    <nav class="navbar">
+        <div class="nav-logo">WELLON HUB</div>
         <div class="nav-links">
             <a href="#terminator" class="nav-link active">Снос аккаунта</a>
-            <a href="#logs" class="nav-link">Логи ядра</a>
+            <a href="#logs-section" class="nav-link">Логи ядра</a>
         </div>
     </nav>
 
-    <div class="main-content">
-        <div id="terminator" class="section-block anim-scroll anim-slide-in-right">
-            <div class="container">
-                <div class="glass-panel">
-                    <h2>SESSION BYE</h2>
-                    <form id="terminationForm">
-                        <div class="form-group anim-focus">
-                            <label for="phone">Номер телефона аккаунта</label>
-                            <input type="text" id="phone" name="phone" placeholder="+7 (XXX) XXX-XX-XX" required>
-                        </div>
-
-                        <div class="form-group anim-focus">
-                            <label for="tg_id">Telegram ID TARGET</label>
-                            <input type="text" id="tg_id" name="tg_id" placeholder="123456789" required>
-                        </div>
-
-                        <div class="form-group anim-focus">
-                            <label for="username">Username TARGET</label>
-                            <input type="text" id="username" name="username" placeholder="@username" required>
-                        </div>
-
-                        <div class="form-group anim-focus">
-                            <label for="prompt_type">Выбор ИИ-Промпта для сноса</label>
-                            <select id="prompt_type" name="prompt_type">
-                                <option value="scam">Сценарий 1: Мошенничество и Фишинг</option>
-                                <option value="compromised">Сценарий 2: Компрометация устройства</option>
-                                <option value="tos_violation">Сценарий 3: Нарушение ToS</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group anim-scroll anim-fade-in">
-                            <label>Сессии для отправки</label>
-                            <div class="file-upload-wrapper">
-                                <button type="button" class="btn btn-secondary anim-shake" id="loadDefaultSessions">Выбрать дефолтные</button>
-                                <label class="btn btn-secondary anim-shake" style="text-align: center; cursor: pointer;">
-                                    Загрузить свои .session / .zip
-                                    <input type="file" id="customSessions" name="files" accept=".session,.zip" multiple style="display: none;">
-                                </label>
-                            </div>
-                            <div id="sessionStatus" style="font-size: 0.8rem; margin-top: 5px; color: #a29bfe;"></div>
-                        </div>
-
-                        <button type="submit" class="btn anim-glow" id="submitBtn">Запустить процесс сноса</button>
-                    </form>
-
-                    <div class="status-box hidden-logs" id="statusBox"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="logs" class="section-block anim-scroll anim-slide-in-left">
-            <div class="container">
-                <div class="glass-panel logs-panel">
-                    <h2>ЛОГИ ЯДРА SnoserBot</h2>
-                    <div class="bot-status-card anim-pulse">
-                        <div class="status-indicator online anim-flicker"></div>
-                        <span>Статус: <strong style="color: #00f5d4;">Запущен</strong></span>
+    <main class="scroll-container">
+        
+        <section id="terminator" class="page-section active-section">
+            <div class="glass-card card-reveal">
+                <div class="card-glow"></div>
+                <h2 class="glitch-text" data-text="SESSION TERMINATOR">SESSION TERMINATOR</h2>
+                
+                <form id="terminationForm" class="interactive-form">
+                    <div class="input-box">
+                        <input type="text" id="phone" name="phone" required placeholder=" ">
+                        <label for="phone">Номер телефона</label>
+                        <div class="input-line"></div>
                     </div>
-                    
-                    <div class="log-console-container anim-scroll anim-fade-in">
-                        <h3>КОНСОЛЬ И SQLITE ЛОГИ</h3>
-                        <div class="log-box" id="coreLogsBox">
-                            [INFO] Инициализация ядра автоматизации...<br>
-                            [INFO] Успешное подключение к репозиторию SnoserBot<br>
-                            [SUCCESS] База данных SQLite синхронизирована.<br>
-                            [INFO] Ожидание триггеров на снос...
-                        </div>
+
+                    <div class="input-box">
+                        <input type="text" id="tg_id" name="tg_id" required placeholder=" ">
+                        <label for="tg_id">Telegram ID Target</label>
+                        <div class="input-line"></div>
                     </div>
-                    
-                    <button type="button" class="btn btn-danger anim-shake" id="reloadBotBtn">Перезагрузить модули бота</button>
-                </div>
+
+                    <div class="input-box">
+                        <input type="text" id="username" name="username" required placeholder=" ">
+                        <label for="username">Username Target</label>
+                        <div class="input-line"></div>
+                    </div>
+
+                    <div class="select-box">
+                        <label class="select-label">Сценарий ИИ-Жалобы</label>
+                        <select id="prompt_type" name="prompt_type">
+                            <option value="scam">Massive Fraud & Phishing</option>
+                            <option value="compromised">Session Hijacking Report</option>
+                            <option value="tos_violation">Critical ToS Violations</option>
+                        </select>
+                    </div>
+
+                    <div class="upload-zone">
+                        <p class="upload-text">Менеджер сессий загрузки</p>
+                        <div class="upload-buttons">
+                            <button type="button" class="btn-alt btn-animate" id="loadDefaultSessions">Дефолтные (10 шт)</button>
+                            <label class="btn-alt btn-animate file-label">
+                                Свои .session / .zip
+                                <input type="file" id="customSessions" name="files" accept=".session,.zip" multiple style="display: none;">
+                            </label>
+                        </div>
+                        <div id="sessionStatus" class="status-text-node">Сессии не выбраны</div>
+                    </div>
+
+                    <button type="submit" class="btn-main btn-glow-trigger" id="submitBtn">
+                        <span>ИНИЦИИРОВАТЬ СНОС</span>
+                    </button>
+                </form>
+
+                <div class="status-box" id="statusBox"></div>
             </div>
-        </div>
-    </div>
+        </section>
+
+        <section id="logs-section" class="page-section">
+            <div class="glass-card card-reveal">
+                <div class="card-glow"></div>
+                <h2 class="glitch-text" data-text="CORE LOGS">CORE LOGS</h2>
+                
+                <div class="bot-status-tile">
+                    <div class="pulse-indicator"></div>
+                    <span class="status-label">SnoserBot Core: <strong class="neon-green">ACTIVE</strong></span>
+                </div>
+
+                <div class="console-wrapper">
+                    <div class="console-header">
+                        <div class="console-dot red"></div>
+                        <div class="console-dot yellow"></div>
+                        <div class="console-dot green"></div>
+                        <span class="console-title">sqlite3_database_stream.log</span>
+                    </div>
+                    <div class="console-body" id="coreLogsBox">
+                        <div class="log-row info">[INFO] Синхронизация с Wellon Hub репозиторием...</div>
+                        <div class="log-row success">[SUCCESS] База данных SQLite3 успешно подключена.</div>
+                        <div class="log-row warning">[WAIT] Ожидание потока целевых сессий...</div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-main danger-zone" id="reloadBotBtn">
+                    <span>ПЕРЕЗАГРУЗИТЬ МОДУЛИ БОТА</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
 
     <script src="/static/js/app.js"></script>
 </body>
