@@ -6,18 +6,23 @@ body {
     background: radial-gradient(circle at 50% 50%, #1a0b2e 0%, #05010d 100%);
     color: #f3effa;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     overflow-x: hidden;
+    /* Плавный переход цвета фона */
+    transition: background 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Изменение фона на чисто чёрный при скролле вниз */
+body.scrolled {
+    background: #000000 !important;
 }
 
 .bg-blurs {
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     overflow: hidden;
     z-index: 1;
+    pointer-events: none;
 }
 
 .blur-circle {
@@ -27,6 +32,11 @@ body {
     border-radius: 50%;
     opacity: 0.4;
     animation: float 12s infinite ease-in-out;
+    transition: opacity 0.6s ease;
+}
+
+body.scrolled .blur-circle {
+    opacity: 0.08;
 }
 
 .blur-1 { width: 400px; height: 400px; top: -10%; left: 10%; }
@@ -37,12 +47,102 @@ body {
     50% { transform: translateY(-30px) scale(1.1); }
 }
 
-.container {
+/* Фиксированная навигационная панель Liquid Glass */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 50px;
+    box-sizing: border-box;
+    z-index: 100;
+    transition: all 0.4s ease;
+}
+
+body.scrolled .navbar {
+    background: rgba(0, 0, 0, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    height: 65px;
+}
+
+.nav-logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    background: linear-gradient(45deg, #e0aaff, #9d4edd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+    display: flex;
+    gap: 35px;
+}
+
+.nav-link {
+    color: #c77dff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 6px 0;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(157, 78, 221, 0.8);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #9d4edd, #e0aaff);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after, .nav-link.active::after {
+    width: 100%;
+}
+
+/* Структурирование контента для прокрутки */
+.main-content {
+    margin-top: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 120px;
+    padding-bottom: 100px;
     position: relative;
     z-index: 2;
+}
+
+.section-block {
     width: 100%;
-    max-width: 550px;
-    padding: 20px;
+    display: flex;
+    justify-content: center;
+    scroll-margin-top: 110px;
+}
+
+.container {
+    width: 100%;
+    max-width: 580px;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 /* Эффект Liquid Glass */
@@ -143,15 +243,81 @@ input:focus, select:focus, textarea:focus {
     box-shadow: none;
 }
 
+.btn-danger {
+    background: linear-gradient(135deg, #d90429 0%, #ef233c 100%);
+    box-shadow: 0 4px 15px rgba(217, 4, 41, 0.3);
+}
+.btn-danger:hover {
+    box-shadow: 0 6px 20px rgba(217, 4, 41, 0.5);
+}
+
 .status-box {
     margin-top: 20px;
     padding: 15px;
     border-radius: 12px;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.25);
     border: 1px solid rgba(255, 255, 255, 0.05);
     font-family: monospace;
     font-size: 0.9rem;
     display: none;
     max-height: 150px;
     overflow-y: auto;
+}
+
+/* Компоненты интерактивного чата */
+.chat-messages {
+    height: 220px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.chat-message {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    max-width: 85%;
+}
+
+.chat-message.system {
+    background: rgba(157, 78, 221, 0.08);
+    border-left: 4px solid #9d4edd;
+    color: #e0aaff;
+}
+
+.chat-input-wrapper {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-send {
+    width: auto;
+    padding: 0 25px;
+}
+
+/* Компоненты управления ботом */
+.bot-status-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 14px 20px;
+    border-radius: 12px;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.status-indicator.online {
+    background: #00f5d4;
+    box-shadow: 0 0 12px #00f5d4;
 }
